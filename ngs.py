@@ -7,7 +7,7 @@ import json
 
 __version__ = '0.0.1'
 
-ngs_process = Popen(["ngs-jupyter-connector.ngs"], stdout=PIPE, stdin=PIPE, stderr=STDOUT, shell=True)
+ngs_process = Popen(["ngs-jupyter-connector.ngs"], stdout=PIPE, stdin=PIPE, shell=True)
 
 @magics_class
 class NGSMagics(Magics):
@@ -23,13 +23,14 @@ class NGSMagics(Magics):
         json_input = json.dumps({"vars": {}, "expr": called_with})
         print(json_input)
 
-        grep_stdout = ngs_process.communicate(input=bytes(json_input, 'utf-8'))[0]
-        return grep_stdout.decode('utf-8').strip()
-
+        stdout = ngs_process.communicate(input=bytes(json_input, 'utf-8'))[0]
+        return stdout.decode('utf-8').strip()
 
 def load_ipython_extension(ipython):
     ngs_magics = NGSMagics(ipython)
     ipython.register_magics(ngs_magics)
 
 def unload_ipython_extension(ipython):
-    ngs_process.stdin.close()
+    print('unloading module')
+    ngs_process.stdin.close()  # for ngs to finish gracefully
+    ngs_process.wait()
