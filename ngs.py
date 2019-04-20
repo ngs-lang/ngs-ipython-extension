@@ -1,10 +1,21 @@
 # ngs.py
+"""Extension for integration with ngs language of IPython notebooks
+Usage:
+%load_ext ngs
+
+# single line:
+%ngs echo('hello')
+# multiline:
+%ngs echo('hello')
+...  echo('word')
+...
+...
+"""
 
 from IPython.core.magic import (magics_class, line_cell_magic, Magics)
 from subprocess import Popen, PIPE
 import json
 import warnings
-
 
 __version__ = '0.0.1'
 
@@ -29,13 +40,17 @@ class NGSMagics(Magics):
         result = ngs_process.stdout.readline()
         json_result = json.loads(result)
 
+        exc = ""
         for dest in json_result['output']:
             if dest[0] == 'warn':
                 warnings.warn(dest[1])
             if dest[0] == 'exc':
-                raise ValueError(dest[1])
+                exc = exc + dest[1] + '\n'
             if dest[0] == 1:
                 print(dest[1])
+
+        if exc is not "":
+            raise ValueError(exc)
 
         if 'result' in json_result:
             return json_result['result']
