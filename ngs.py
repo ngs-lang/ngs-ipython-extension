@@ -40,7 +40,7 @@ class NGSMagics(Magics):
         for var in ip.run_line_magic('who_ls', ''):
             input_vars[var] = ip.user_ns[var]
         input_json = json.dumps({"vars": input_vars, "expr": called_with})
-        print('sending:', input_json)
+        # print('sending:', input_json)
 
         # Send input to ngs
         ngs_process.stdin.write(bytes(input_json + '\n', 'utf-8'))
