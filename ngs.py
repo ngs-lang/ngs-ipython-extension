@@ -15,7 +15,6 @@ Usage:
 from IPython.core.magic import (magics_class, line_cell_magic, Magics)
 from subprocess import Popen, PIPE
 import json
-import warnings
 
 __version__ = '0.0.1'
 
@@ -43,14 +42,14 @@ class NGSMagics(Magics):
         exc = ""
         for dest in json_result['output']:
             if dest[0] == 'warn':
-                warnings.warn(dest[1])
+                print("\x1b[33mWARNING:", dest[1], "\x1b[0m")
             if dest[0] == 'exc':
                 exc = exc + dest[1] + '\n'
             if dest[0] == 1:
                 print(dest[1])
 
-        if exc is not "":
-            raise ValueError(exc)
+        if exc:
+            print("\x1b[31m" + exc + "\x1b[0m")
 
         if 'result' in json_result:
             return json_result['result']
