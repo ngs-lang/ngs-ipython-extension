@@ -6,6 +6,7 @@ iPython extension for ngs language
 
 ## Running connector
 %ngs [single line expression]
+
 %%ngs [multi line code]
 
 ## Handling of variables
