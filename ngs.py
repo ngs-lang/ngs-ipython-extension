@@ -2,7 +2,7 @@
 
 from IPython.core.magic import (magics_class, line_cell_magic, Magics)
 from IPython.core.error import UsageError
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE
 import json
 
 __version__ = '0.0.1'
@@ -21,16 +21,21 @@ class NGSMagics(Magics):
             called_with = line.strip() + "\n" + cell.strip()
 
         json_input = json.dumps({"vars": {}, "expr": called_with})
-        print(json_input)
+        print('sending:', json_input)
 
-        stdout = ngs_process.communicate(input=bytes(json_input, 'utf-8'))[0]
-        return stdout.decode('utf-8').strip()
+        ngs_process.stdin.write(bytes(json_input + '\n', 'utf-8'))
+        ngs_process.stdin.flush()
+        result = ngs_process.stdout.readline()
+        json_result = json.loads(result)
+
+        return json_result['result']
 
 def load_ipython_extension(ipython):
+    print('loading ngs module')
     ngs_magics = NGSMagics(ipython)
     ipython.register_magics(ngs_magics)
 
 def unload_ipython_extension(ipython):
-    print('unloading module')
+    print('unloading ngs module')
     ngs_process.stdin.close()  # for ngs to finish gracefully
     ngs_process.wait()
