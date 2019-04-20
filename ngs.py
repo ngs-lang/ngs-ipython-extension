@@ -1,9 +1,10 @@
 # ngs.py
 
 from IPython.core.magic import (magics_class, line_cell_magic, Magics)
-from IPython.core.error import UsageError
 from subprocess import Popen, PIPE
 import json
+import warnings
+
 
 __version__ = '0.0.1'
 
@@ -28,7 +29,17 @@ class NGSMagics(Magics):
         result = ngs_process.stdout.readline()
         json_result = json.loads(result)
 
-        return json_result['result']
+        for dest in json_result['output']:
+            if dest[0] == 'warn':
+                warnings.warn(dest[1])
+            if dest[0] == 'exc':
+                raise ValueError(dest[1])
+            if dest[0] == 1:
+                print(dest[1])
+
+        if 'result' in json_result:
+            return json_result['result']
+
 
 def load_ipython_extension(ipython):
     print('loading ngs module')
