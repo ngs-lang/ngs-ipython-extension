@@ -16,15 +16,27 @@ Usage:
 __version__ = '0.0.1'
 
 import json
-from IPython import get_ipython
-from IPython.core.magic import (magics_class, line_cell_magic, Magics)
 from subprocess import Popen, PIPE
 
+from IPython import get_ipython
+from IPython.core.magic import (magics_class, line_cell_magic, Magics)
+from ipywidgets import FloatProgress, HTML, VBox
+from IPython.display import display
 
 ngs_process = Popen(["ngs-jupyter-connector.ngs"], stdout=PIPE, stdin=PIPE, shell=True)
 
 @magics_class
 class NGSMagics(Magics):
+
+    def __init__(self, *args, **kwargs):
+        self.displayed_widgets = {}
+        return super().__init__(*args, **kwargs)
+
+    def ensure_displayed(self, widget):
+        if widget.model_id in self.displayed_widgets:
+            return
+        display(widget)
+        self.displayed_widgets[widget.model_id] = True
 
     @line_cell_magic
     def ngs(self, line, cell=None):
@@ -46,37 +58,68 @@ class NGSMagics(Magics):
         ngs_process.stdin.write(bytes(input_json + '\n', 'utf-8'))
         ngs_process.stdin.flush()
 
-        # Read ngs response
-        result = ngs_process.stdout.readline()
+        output_pfx = {
+            1: "",
+            'warn': "\x1b[33mWARNING: ",
+            'error': "\x1b[1;31m\n",
+            'exc': "\x1b[31m\n",
+        }
 
-        # Parse json response
-        result_json = json.loads(result)
-        result_exception = ""
-        if 'output' in result_json:
-            for output in result_json['output']:
-                if output[0] == 'warn':  # warnings
-                    print("\x1b[33mWARNING:", output[1], "\x1b[0m")
+        status_widget = HTML()
+        progress_widget = FloatProgress(min=0, max=1, value=0)
+        # vbox_widget = VBox()
 
-                if output[0] == 'exc':  # exceptions
-                    result_exception = result_exception + output[1] + '\n'
+        status_widget.value = 'aaa'
 
-                if output[0] == 1:  # normal output
-                    print(output[1])
+        ret = None
+        while True:
+            # Read ngs response
+            result = ngs_process.stdout.readline()
 
-        if 'vars' in result_json:
-            result_vars = result_json['vars']
-            for key in result_vars:
-                if ip.user_ns[key] != result_vars[key]:
-                    ip.user_ns[key] = result_vars[key]
+            # Parse json response
+            result_json = json.loads(result)
+            t = result_json['type']
 
-        if 'error' in result_json:
-            print("\x1b[1;31m" + '\n'.join(result_json['error']['text']) + "\x1b[0m")
-        if result_exception:
-            print("\x1b[31m" + "\n" + result_exception + "\x1b[0m")
+            if t == 'finish':
+                break
 
-        if 'result' in result_json:
-            return result_json['result']
+            if t == 'output':
+                print(result_json['channel'])
 
+                pfx = output_pfx[result_json['channel']]
+                print(pfx + result_json['text'] + "\x1b[0m")
+                continue
+
+            if t == 'var':
+                ip.user_ns[result_json['name']] = result_json['value']
+                continue
+
+            if t == 'result':
+                ret = result_json['value']
+                continue
+
+            if t == 'error':
+                progress_widget.bar_style = 'danger'
+                for line in result_json['text_lines']:
+                    print("\x1b[31m" + line + "\x1b[0m")
+                continue
+
+            if t == 'status':
+                self.ensure_displayed(status_widget)
+                status_widget.value = result_json['text']
+                continue
+
+            if t == 'progress':
+                self.ensure_displayed(progress_widget)
+                progress_widget.value = result_json['value'][0]
+                progress_widget.max = result_json['value'][1]
+                continue
+
+            print("*** WARNING: Unknown message type from NGS: " + t)
+
+        status_widget.close()
+        progress_widget.close()
+        return ret
 
 def load_ipython_extension(ipython):
     print('loading ngs module\n')
