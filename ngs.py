@@ -20,7 +20,7 @@ from subprocess import Popen, PIPE
 
 from IPython import get_ipython
 from IPython.core.magic import (magics_class, line_cell_magic, Magics)
-from ipywidgets import FloatProgress, HTML, VBox
+from ipywidgets import FloatProgress, Text
 from IPython.display import display
 
 ngs_process = Popen(["ngs-jupyter-connector.ngs"], stdout=PIPE, stdin=PIPE, shell=True)
@@ -60,14 +60,14 @@ class NGSMagics(Magics):
 
         output_pfx = {
             1: "",
+            'log': "\x1b[0;37mLOG: ",
             'warn': "\x1b[33mWARNING: ",
-            'error': "\x1b[1;31m\n",
-            'exc': "\x1b[31m\n",
+            'error': "\x1b[1;31m",
+            'exc': "\x1b[31m",
         }
 
-        status_widget = HTML()
+        status_widget = Text()
         progress_widget = FloatProgress(min=0, max=1, value=0)
-        # vbox_widget = VBox()
 
         status_widget.value = 'aaa'
 
@@ -84,8 +84,6 @@ class NGSMagics(Magics):
                 break
 
             if t == 'output':
-                print(result_json['channel'])
-
                 pfx = output_pfx[result_json['channel']]
                 print(pfx + result_json['text'] + "\x1b[0m")
                 continue
