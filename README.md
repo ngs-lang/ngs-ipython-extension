@@ -8,7 +8,7 @@ copy: `cp -v ngs.py $(ipython locate)/extensions/ngs.py`
 or link: `ln -s $(pwd)/ngs.py $(ipython locate)/extensions/ngs.py`
 
 
-## on Google Colab or other external Notebook Systems
+## on Google Colab or other external Notebooks
 Requirements
 * For linux, `git`, `curl` and `apt` need to be installed
 * For Mac: `git`, `curl` and `brew` need to be installed
