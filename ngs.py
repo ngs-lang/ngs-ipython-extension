@@ -113,7 +113,7 @@ class NGSMagics(Magics):
                 progress_widget.max = result_json['value'][1]
                 continue
 
-            if t == 'table'
+            if t == 'table':
                 import pandas as pd
                 pd.DataFrame(result_json['rows'], columns=result_json['columns_names'])
                 continue
