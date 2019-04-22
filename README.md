@@ -16,7 +16,7 @@ Requirements
 
 Add the following lines to the notebook and run:
 
-`!curl -o ngs-install.sh https://raw.githubusercontent.com/ngs-lang/ngs-ipython-extension/master/ngs-install.sh && chmod +x ngs-install.sh && ./ngs-install.sh`
+`!curl https://raw.githubusercontent.com/ngs-lang/ngs-ipython-extension/master/ngs-install.sh | bash`
 
 `%load_ext ngs`
 
