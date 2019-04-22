@@ -25,15 +25,15 @@ Add the following lines to the notebook and run:
 This extension can be used both with Jupyter notebooks or ipython
 
 ## Loading extension
-%load_ext ngs
+`%load_ext ngs`
 
 ## Re-loading extension
-%reload_ext ngs
+`%reload_ext ngs`
 
 ## Running
-%ngs [single line expression]
+`%ngs [single line expression]`
 
-%%ngs [multi line code]
+`%%ngs [multi line code]`
 
 ## Handling of variables
 Python defined variables will be sent to ngs context and can be used inside the scripts
