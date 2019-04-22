@@ -99,7 +99,7 @@ class NGSMagics(Magics):
             if t == 'error':
                 progress_widget.bar_style = 'danger'
                 for line in result_json['text_lines']:
-                    print("\x1b[31m" + line + "\x1b[0m")
+                    print("\x1b[1;31m" + line + "\x1b[0m")
                 continue
 
             if t == 'status':
