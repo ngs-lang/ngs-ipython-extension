@@ -8,7 +8,7 @@ copy: `cp -v ngs.py $(ipython locate)/extensions/ngs.py`
 or link: `ln -s $(pwd)/ngs.py $(ipython locate)/extensions/ngs.py`
 
 
-## on Google Colab or other external Notebooks
+## on Google Colab or other external Jupyter Notebooks
 Requirements
 * For linux, `git`, `curl` and `apt` need to be installed
 * For Mac: `git`, `curl` and `brew` need to be installed
@@ -22,7 +22,7 @@ Add the following lines to the notebook and run:
 
 
 # Usage
-This extension can be used both with Jupyter notebooks or ipython
+This extension can be used both with Jupyter Notebooks or iPython
 
 ## Loading extension
 `%load_ext ngs`
@@ -38,4 +38,4 @@ This extension can be used both with Jupyter notebooks or ipython
 ## Handling of variables
 Python defined variables will be sent to ngs context and can be used inside the scripts
 
-On the return from ngs, the python context will be updated with the newer values
+On the return from ngs, the Python context will be updated with the newer values
