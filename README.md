@@ -18,9 +18,6 @@ Add the following lines to the notebook and run:
 
 `!curl https://raw.githubusercontent.com/ngs-lang/ngs-ipython-extension/master/ngs-install.sh | bash`
 
-`%load_ext ngs`
-
-
 # Usage
 This extension can be used both with Jupyter Notebooks or iPython
 
