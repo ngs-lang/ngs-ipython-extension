@@ -2,7 +2,7 @@
 iPython extension for [ngs](https://github.com/ngs-lang/ngs) language
 
 # Installation
-## for local iPython or Jupyter Notebook
+## on local iPython or Jupyter Notebook
 copy: `cp -v ngs.py $(ipython locate)/extensions/ngs.py`
 
 or link: `ln -s $(pwd)/ngs.py $(ipython locate)/extensions/ngs.py`
