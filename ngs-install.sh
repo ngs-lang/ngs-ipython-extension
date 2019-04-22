@@ -1,13 +1,16 @@
 #!/bin/bash
 
-# base dependencies
-apt-get install -y git curl
-
 # install ngs
 if [ ! -d 'ngs' ]
 then
     git clone --single-branch --branch dev https://github.com/ngs-lang/ngs.git
-    cd ngs && ./install-linux.sh
+    cd ngs
+    if [ $(uname -s) == 'Darwin' ]
+    then
+        ./install-mac.sh
+    else
+        ./install-linux.sh
+    fi
 fi
 
 # copy ngs ipython extension
