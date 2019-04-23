@@ -20,6 +20,7 @@ from subprocess import Popen, PIPE
 
 from IPython import get_ipython
 from IPython.core.magic import (magics_class, line_cell_magic, Magics)
+from IPython.display import display, HTML
 from ipywidgets import FloatProgress, Text
 from IPython.display import display
 
@@ -115,7 +116,7 @@ class NGSMagics(Magics):
 
             if t == 'table':
                 import pandas as pd
-                pd.DataFrame(result_json['rows'], columns=result_json['columns_names'])
+                display(pd.DataFrame(result_json['rows'], columns=result_json['columns_names']))
                 continue
 
             print("*** WARNING: Unknown message type from NGS: " + t)
