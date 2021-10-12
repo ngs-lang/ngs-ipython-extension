@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # install ngs
-if [ ! -d 'ngs' ]
+if ! command -v ngs &> /dev/null
 then
+    echo "NGS not found, installing ngs"
     curl https://ngs-lang.org/install.sh | bash
 fi
 
