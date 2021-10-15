@@ -7,6 +7,13 @@ copy: `cp -v ngs.py $(ipython locate)/extensions/ngs.py`
 
 or link: `ln -s $(pwd)/ngs.py $(ipython locate)/extensions/ngs.py`
 
+## using Docker
+
+```
+docker run -p 8888:8888 ngslang/ngs:jupyter
+```
+
+Then access the http://127.0.0.1:8888/?token=XXXXX  that appears in the output
 
 ## on Google Colab or other external Jupyter Notebooks
 Requirements
