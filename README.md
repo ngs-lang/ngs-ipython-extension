@@ -10,8 +10,18 @@ or link: `ln -s $(pwd)/ngs.py $(ipython locate)/extensions/ngs.py`
 ## using Docker
 
 ```
-docker run -p 8888:8888 ngslang/ngs:jupyter
+docker run -p 8888:8888 ngslang/ngs-jupyter
 ```
+
+Then access the http://127.0.0.1:8888/?token=XXXXX  that appears in the output
+
+## using Docker - local build
+
+Build:
+`make docker-build`
+
+Run:
+`make docker-run`
 
 Then access the http://127.0.0.1:8888/?token=XXXXX  that appears in the output
 
