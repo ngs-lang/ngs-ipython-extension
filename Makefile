@@ -4,8 +4,8 @@ default:
 
 .PHONY: docker-build
 docker-build:
-	docker build -t ngslang/ngs-jupyter .
+	docker build -t ngslang/ngs-jupyter:local .
 
 .PHONY: docker-run
 docker-run:
-	docker run -p 8888:8888 ngslang/ngs-jupyter
+	docker run -p 8888:8888 ngslang/ngs-jupyter:local
